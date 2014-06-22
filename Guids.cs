@@ -2,7 +2,7 @@
 // MUST match guids.h
 using System;
 
-namespace LOST.WebLink
+namespace Lost.WebLink
 {
     static class GuidList
     {

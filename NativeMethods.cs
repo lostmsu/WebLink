@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace LOST.WebLink
+namespace Lost.WebLink
 {
     /// <summary>
     /// This class will contain all methods that we need to import.

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace LOST.WebLink
+namespace Lost.WebLink
 {
 	public partial class WebView : UserControl
 	{

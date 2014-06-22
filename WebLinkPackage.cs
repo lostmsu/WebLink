@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 
-namespace LOST.WebLink
+namespace Lost.WebLink
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -27,13 +27,11 @@ namespace LOST.WebLink
     // This attribute is used to register the informations needed to show the this package
     // in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    // This attribute is needed to let the shell know that this package exposes some menus.
-    [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideEditorExtension(typeof(EditorFactory), ".website", 50, 
               ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}", 
               TemplateDir = "Templates", 
               NameResourceID = 105,
-              DefaultName = "WebLink")]
+              DefaultName = "Web Link")]
     [ProvideKeyBindingTable(GuidList.guidWebLinkEditorFactoryString, 102)]
     [ProvideEditorLogicalView(typeof(EditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
     [Guid(GuidList.guidWebLinkPkgString)]

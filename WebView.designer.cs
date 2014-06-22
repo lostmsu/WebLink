@@ -1,4 +1,4 @@
-namespace LOST.WebLink
+namespace Lost.WebLink
 {
     using System.Windows.Forms;
 

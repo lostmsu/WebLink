@@ -20,7 +20,7 @@ using ISysServiceProvider = System.IServiceProvider;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using VSStd97CmdID = Microsoft.VisualStudio.VSConstants.VSStd97CmdID;
 
-namespace LOST.WebLink
+namespace Lost.WebLink
 {
     using System.Linq;
 
