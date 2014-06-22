@@ -1,5 +1,7 @@
 namespace LOST.WebLink
 {
+    using System.Windows.Forms;
+
     partial class WebView
     {
         /// <summary> 
@@ -28,36 +30,42 @@ namespace LOST.WebLink
         /// </summary>
         private void InitializeComponent()
         {
-            this.richTextBoxCtrl = new LOST.WebLink.EditorTextBox();
-            this.SuspendLayout();
-            // 
-            // richTextBoxCtrl
-            // 
-            this.richTextBoxCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxCtrl.Location = new System.Drawing.Point(0, 0);
-            this.richTextBoxCtrl.Name = "richTextBoxCtrl";
-            this.richTextBoxCtrl.Size = new System.Drawing.Size(150, 150);
-            this.richTextBoxCtrl.TabIndex = 0;
-            this.richTextBoxCtrl.MouseEnter += new System.EventHandler(this.richTextBoxCtrl_MouseEnter);
-            this.richTextBoxCtrl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.richTextBoxCtrl_KeyPress);
-            this.richTextBoxCtrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBoxCtrl_KeyDown);
-            // 
-            // MyEditor
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.richTextBoxCtrl);
-            this.Name = "MyEditor";
-            this.ResumeLayout(false);
+			this.browser = new System.Windows.Forms.WebBrowser();
+			this.address = new System.Windows.Forms.TextBox();
+			this.SuspendLayout();
+			// 
+			// browser
+			// 
+			this.browser.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.browser.Location = new System.Drawing.Point(0, 20);
+			this.browser.Name = "browser";
+			this.browser.ScriptErrorsSuppressed = true;
+			this.browser.Size = new System.Drawing.Size(150, 130);
+			this.browser.TabIndex = 0;
+			// 
+			// address
+			// 
+			this.address.Dock = System.Windows.Forms.DockStyle.Top;
+			this.address.Location = new System.Drawing.Point(0, 0);
+			this.address.Name = "address";
+			this.address.Size = new System.Drawing.Size(150, 20);
+			this.address.TabIndex = 1;
+			// 
+			// WebView
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.browser);
+			this.Controls.Add(this.address);
+			this.Name = "WebView";
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
         #endregion
 
-        private EditorTextBox richTextBoxCtrl;
-
-
-    }
+        private WebBrowser browser;
+		private TextBox address;
+	}
 }

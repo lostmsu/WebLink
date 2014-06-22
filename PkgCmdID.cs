@@ -11,7 +11,6 @@ namespace LOST.WebLink
 
         // Menus
         public const int IDM_TLB_RTF = 0x0001;			// toolbar
-        public const int IDMX_RTF = 0x0002;			// context menu
         public const int IDM_RTFMNU_ALIGN = 0x0004;
         public const int IDM_RTFMNU_SIZE = 0x0005;
 

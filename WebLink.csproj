@@ -120,12 +120,6 @@
   <ItemGroup>
     <Compile Include="EditorFactory.cs" />
     <Compile Include="EditorPane.cs" />
-    <Compile Include="EditorTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="EditorTextBox.designer.cs">
-      <DependentUpon>EditorTextBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="WebView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -133,7 +127,6 @@
       <DependentUpon>WebView.cs</DependentUpon>
     </Compile>
     <Compile Include="NativeMethods.cs" />
-    <Compile Include="VSMacroRecorder.cs" />
     <None Include="Templates\website.website">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -155,10 +148,6 @@
   <ItemGroup>
     <EmbeddedResource Include="EditorPane.resx">
       <DependentUpon>EditorPane.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="EditorTextBox.resx">
-      <DependentUpon>EditorTextBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WebView.resx">
@@ -189,17 +178,6 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="RichEditObjectModel">
-      <Guid>{8CC497C9-A1DF-11CE-8098-00AA0047BE5D}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\File.ico" />
