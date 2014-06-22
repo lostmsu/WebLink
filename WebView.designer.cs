@@ -63,9 +63,9 @@ namespace Lost.WebLink
 
         }
 
-        #endregion
+		#endregion
 
-        private WebBrowser browser;
+		private WebBrowser browser;
 		private TextBox address;
 	}
 }

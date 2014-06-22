@@ -193,6 +193,7 @@ namespace Lost.WebLink
 
             resources.ApplyResources(this.editorControl, "editorControl", CultureInfo.CurrentUICulture);
             // Event handlers for macro recording.
+            Debug.WriteLine("WebView setup in thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
             this.editorControl.Browser.Navigating += this.OnNavigating;
             this.editorControl.Browser.Navigated += this.OnNavigated;
             this.editorControl.Address.KeyDown += this.OnAddressKeyDown;
@@ -206,14 +207,15 @@ namespace Lost.WebLink
 
         void OnAddressKeyDown(object sender, KeyEventArgs e)
         {
+            Debug.WriteLine("WebView address keydown handler in thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
             if (e.KeyCode == Keys.Enter && !this.editorControl.Address.ReadOnly) {
-                this.editorControl.Browser.Focus();
-                this.editorControl.Browser.Navigate(this.editorControl.Address.Text);
-            }
+				this.editorControl.Browser.Focus();
+				this.editorControl.Browser.Navigate(this.editorControl.Address.Text);
+			}
 
             if (e.KeyCode == Keys.Escape) {
-                this.editorControl.Address.Text = this.editorControl.Browser.Url.ToString();
-            }
+				this.editorControl.Address.Text = this.editorControl.Browser.Url.ToString();
+			}
         }
 
         /// <summary>
@@ -578,6 +580,7 @@ namespace Lost.WebLink
                         continue;
 
                     string uri = line.Substring("URL=".Length);
+                    Debug.WriteLine("WebView url load in thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
                     this.editorControl.Browser.Navigate(uri);
                     this.editorControl.Address.Text = uri;
                     loaded = true;
@@ -724,7 +727,8 @@ namespace Lost.WebLink
                 if (!line.StartsWith("URL=", StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
-                lines[i] = "URL=" + this.editorControl.Browser.Url;
+                Debug.WriteLine("WebView SaveTo in thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
+	            lines[i] = "URL=" + this.editorControl.Address.Text;
             }
             File.WriteAllLines(pszFilename, lines);
         }
@@ -1208,6 +1212,7 @@ namespace Lost.WebLink
         /// <param name="_isFileReadOnly">Indicates whether the file loaded is Read Only or not</param>
         private void SetReadOnly(bool _isFileReadOnly)
         {
+            Debug.WriteLine("WebView SetReadOnly in thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
             this.editorControl.Browser.AllowNavigation = !_isFileReadOnly;
             this.editorControl.Address.ReadOnly = _isFileReadOnly;
 
@@ -1323,7 +1328,8 @@ namespace Lost.WebLink
 
         private void OnNavigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            this.editorControl.Address.Text = e.Url.ToString();
+            Debug.WriteLine("WebView OnNavigated in thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
+            this.editorControl.Address.Text = this.editorControl.Browser.Url.ToString();
         }
 
         /// <summary>

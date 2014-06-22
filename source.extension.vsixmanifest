@@ -3,7 +3,7 @@
   <Identifier Id="9289174b-849b-4cd7-bef4-36dc84e256bc">
     <Name>WebLink</Name>
     <Author>Victor Milovanov</Author>
-    <Version>0.1</Version>
+    <Version>0.1.1</Version>
     <Description xml:space="preserve">Simplify adding web links to your solution/project</Description>
     <Locale>1033</Locale>
     <InstalledByMsi>false</InstalledByMsi>
