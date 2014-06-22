@@ -29,7 +29,7 @@ namespace LOST.WebLink
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideEditorExtension(typeof(EditorFactory), ".url", 50, 
+    [ProvideEditorExtension(typeof(EditorFactory), ".website", 50, 
               ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}", 
               TemplateDir = "Templates", 
               NameResourceID = 105,

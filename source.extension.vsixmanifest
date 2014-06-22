@@ -2,7 +2,7 @@
 <Vsix Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
   <Identifier Id="9289174b-849b-4cd7-bef4-36dc84e256bc">
     <Name>WebLink</Name>
-    <Author>LOST</Author>
+    <Author>lostmsu</Author>
     <Version>0.1</Version>
     <Description xml:space="preserve">Simplify adding web links to your solution/project</Description>
     <Locale>1033</Locale>
@@ -12,7 +12,7 @@
         <Edition>Pro</Edition>
       </VisualStudio>
     </SupportedProducts>
-    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.6" />
   </Identifier>
   <References>
         <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">

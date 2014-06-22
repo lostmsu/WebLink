@@ -1,6 +1,6 @@
 namespace LOST.WebLink
 {
-    partial class MyEditor
+    partial class WebView
     {
         /// <summary> 
         /// Required designer variable.

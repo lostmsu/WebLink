@@ -6,14 +6,14 @@ using tom;
 
 namespace LOST.WebLink
 {
-    public partial class MyEditor : UserControl
+    public partial class WebView : UserControl
     {
         private const int GetOleInterfaceCommandId = 1084;
 
         private string m_TextToRecord;
         private VSMacroRecorder m_Recorder;
 
-        public MyEditor()
+        public WebView()
         {
             InitializeComponent();
             this.richTextBoxCtrl.WordWrap = false;

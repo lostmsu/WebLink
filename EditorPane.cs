@@ -35,21 +35,21 @@ namespace LOST.WebLink
     // For our file type should appear under "General" in the new files dialog, we need the following:-
     //     - A .vsdir file in the same directory as NewFileItems.vsdir (generally under Common7\IDE\NewFileItems).
     //       In our case the file name is Editor.vsdir but we only require a file with .vsdir extension.
-    //     - An empty url file in the same directory as NewFileItems.vsdir. In
-    //       our case we chose url.url. Note this file name appears in Editor.vsdir
+    //     - An empty website file in the same directory as NewFileItems.vsdir. In
+    //       our case we chose website.website. Note this file name appears in Editor.vsdir
     //       (see vsdir file format below)
     //     - Three text strings in our language specific resource. File Resources.resx :-
     //          - "Rich Text file" - this is shown next to our icon.
     //          - "A blank rich text file" - shown in the description window
     //             in the new file dialog.
-    //          - "url" - This is the base file name. New files will initially
-    //             be named as url1.url, url2.url... etc.
+    //          - "website" - This is the base file name. New files will initially
+    //             be named as website1.website, website2.website... etc.
     ///////////////////////////////////////////////////////////////////////////////
     // Editor.vsdir contents:-
-    //    url.url|{3085E1D6-A938-478e-BE49-3546C09A1AB1}|#106|80|#109|0|401|0|#107
+    //    website.website|{3085E1D6-A938-478e-BE49-3546C09A1AB1}|#106|80|#109|0|401|0|#107
     //
     // The fields in order are as follows:-
-    //    - url.url - our empty url file
+    //    - website.website - our empty website file
     //    - {db16ff5e-400a-4cb7-9fde-cb3eab9d22d2} - our Editor package guid
     //    - #106 - the ID of "Rich Text file" in the resource
     //    - 80 - the display ordering priority
@@ -57,7 +57,7 @@ namespace LOST.WebLink
     //    - 0 - resource dll string (we don't use this)
     //    - 401 - the ID of our icon
     //    - 0 - various flags (we don't use this - se vsshell.idl)
-    //    - #107 - the ID of "url"
+    //    - #107 - the ID of "website"
     ///////////////////////////////////////////////////////////////////////////////
 
     //This is required for Find In files scenario to work properly. This provides a connection point 
@@ -84,11 +84,10 @@ namespace LOST.WebLink
                                 IVsCodeWindow,      //needed for Find and Replace to work appropriately
                                 IVsTextLines,       //needed for Find and Replace to work appropriately
                                 IExtensibleObject,  //so we can get the atuomation object
-                                IEditor,  //the automation interface for Editor
                                 IVsToolboxUser      //Sends notification about Toolbox items to the owner of these items
     {
         private const uint MyFormat = 0;
-        private const string MyExtension = ".url";
+        private const string MyExtension = ".website";
         private static string[] fontSizeArray = { "8", "9", "10", "11", "12", "14", "16", "18",
                                                   "20", "22", "24", "26", "28", "36", "48", "72"};
 
@@ -124,7 +123,7 @@ namespace LOST.WebLink
         // This flag is true when we are asking the QueryEditQuerySave service if we can edit the
         // file. It is used to avoid to have more than one request queued.
         private bool gettingCheckoutStatus;
-        private MyEditor editorControl;
+        private WebView editorControl;
 
         private Microsoft.VisualStudio.Shell.SelectionContainer selContainer;
         private ITrackSelection trackSel;
@@ -182,7 +181,7 @@ namespace LOST.WebLink
         #endregion
 
         /// <summary>
-        /// Initialization routine for the Editor. Loads the list of properties for the url document 
+        /// Initialization routine for the Editor. Loads the list of properties for the website document 
         /// which will show up in the properties window 
         /// </summary>
         /// <param name="package"></param>
@@ -210,7 +209,7 @@ namespace LOST.WebLink
             // Create and initialize the editor
 
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorPane));
-            this.editorControl = new MyEditor();
+            this.editorControl = new WebView();
 
             resources.ApplyResources(this.editorControl, "editorControl", CultureInfo.CurrentUICulture);
             // Event handlers for macro recording.
@@ -378,70 +377,69 @@ namespace LOST.WebLink
             // responsible for handling the collection of commands implemented by the package.
 
             IMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
-            if (null != mcs)
-            {
-                // Now create one object derived from MenuCommnad for each command defined in
-                // the CTC file and add it to the command service.
+            if (null == mcs)
+                return;
+            // Now create one object derived from MenuCommnad for each command defined in
+            // the CTC file and add it to the command service.
 
-                // For each command we have to define its id that is a unique Guid/integer pair, then
-                // create the OleMenuCommand object for this command. The EventHandler object is the
-                // function that will be called when the user will select the command. Then we add the 
-                // OleMenuCommand to the menu service.  The addCommand helper function does all this for us.
+            // For each command we have to define its id that is a unique Guid/integer pair, then
+            // create the OleMenuCommand object for this command. The EventHandler object is the
+            // function that will be called when the user will select the command. Then we add the 
+            // OleMenuCommand to the menu service.  The addCommand helper function does all this for us.
 
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.SelectAll,
-                                new EventHandler(onSelectAll), null);
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Copy,
-                                new EventHandler(onCopy), new EventHandler(onQueryCopy));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Cut,
-                                new EventHandler(onCut), new EventHandler(onQueryCutOrDelete));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Paste,
-                                new EventHandler(onPaste), new EventHandler(onQueryPaste));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Delete,
-                                new EventHandler(onDelete), new EventHandler(onQueryCutOrDelete));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Undo,
-                                new EventHandler(onUndo), new EventHandler(onQueryUndo));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Redo,
-                                new EventHandler(onRedo), new EventHandler(onQueryRedo));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Bold,
-                                new EventHandler(onBold), new EventHandler(onQueryBold));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Italic,
-                                new EventHandler(onItalic), new EventHandler(onQueryItalic));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Underline,
-                                new EventHandler(onUnderline), new EventHandler(onQueryUnderline));
-                addCommand(mcs, GuidList.guidWebLinkCmdSet, (int)PkgCmdIDList.icmdStrike,
-                                new EventHandler(onStrikethrough), new EventHandler(onQueryStrikethrough));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.JustifyCenter,
-                                new EventHandler(onJustifyCenter), new EventHandler(onQueryJustifyCenter));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.JustifyLeft,
-                                new EventHandler(onJustifyLeft), new EventHandler(onQueryJustifyLeft));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.JustifyRight,
-                                new EventHandler(onJustifyRight), new EventHandler(onQueryJustifyRight));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.FontNameGetList,
-                                new EventHandler(onFontNameGetList), null);
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.FontName,
-                                new EventHandler(onFontName), null);
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.FontSizeGetList,
-                                new EventHandler(onFontSizeGetList), null);
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.FontSize,
-                                new EventHandler(onFontSize), null);
-                addCommand(mcs, VSConstants.VSStd2K, (int)VSConstants.VSStd2KCmdID.BULLETEDLIST,
-                                new EventHandler(onBulletedList), new EventHandler(onQueryBulletedList));
-                // Support clipboard rings
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.PasteNextTBXCBItem,
-                                new EventHandler(onPasteNextTBXCBItem), new EventHandler(onQueryPasteNextTBXCBItem));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.SelectAll,
+                new EventHandler(onSelectAll), null);
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Copy,
+                new EventHandler(onCopy), new EventHandler(onQueryCopy));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Cut,
+                new EventHandler(onCut), new EventHandler(onQueryCutOrDelete));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Paste,
+                new EventHandler(onPaste), new EventHandler(onQueryPaste));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Delete,
+                new EventHandler(onDelete), new EventHandler(onQueryCutOrDelete));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Undo,
+                new EventHandler(onUndo), new EventHandler(onQueryUndo));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Redo,
+                new EventHandler(onRedo), new EventHandler(onQueryRedo));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Bold,
+                new EventHandler(onBold), new EventHandler(onQueryBold));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Italic,
+                new EventHandler(onItalic), new EventHandler(onQueryItalic));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.Underline,
+                new EventHandler(onUnderline), new EventHandler(onQueryUnderline));
+            addCommand(mcs, GuidList.guidWebLinkCmdSet, (int)PkgCmdIDList.icmdStrike,
+                new EventHandler(onStrikethrough), new EventHandler(onQueryStrikethrough));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.JustifyCenter,
+                new EventHandler(onJustifyCenter), new EventHandler(onQueryJustifyCenter));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.JustifyLeft,
+                new EventHandler(onJustifyLeft), new EventHandler(onQueryJustifyLeft));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.JustifyRight,
+                new EventHandler(onJustifyRight), new EventHandler(onQueryJustifyRight));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.FontNameGetList,
+                new EventHandler(onFontNameGetList), null);
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.FontName,
+                new EventHandler(onFontName), null);
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.FontSizeGetList,
+                new EventHandler(onFontSizeGetList), null);
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.FontSize,
+                new EventHandler(onFontSize), null);
+            addCommand(mcs, VSConstants.VSStd2K, (int)VSConstants.VSStd2KCmdID.BULLETEDLIST,
+                new EventHandler(onBulletedList), new EventHandler(onQueryBulletedList));
+            // Support clipboard rings
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.PasteNextTBXCBItem,
+                new EventHandler(onPasteNextTBXCBItem), new EventHandler(onQueryPasteNextTBXCBItem));
 
-                // These two commands enable Visual Studio's default undo/redo toolbar buttons.  When these
-                // buttons are clicked it triggers a multi-level undo/redo (even when we are undoing/redoing
-                // only one action.  Note that we are not implementing the multi-level undo/redo functionality,
-                // we are just adding a handler for this command so these toolbar buttons are enabled (Note that
-                // we are just reusing the undo/redo command handlers).  To implement multi-level functionality
-                // we would need to properly handle these two commands as well as MultiLevelUndoList and
-                // MultiLevelRedoList.
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.MultiLevelUndo,
-                                new EventHandler(onUndo), new EventHandler(onQueryUndo));
-                addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.MultiLevelRedo,
-                                new EventHandler(onRedo), new EventHandler(onQueryRedo));
-            }
+            // These two commands enable Visual Studio's default undo/redo toolbar buttons.  When these
+            // buttons are clicked it triggers a multi-level undo/redo (even when we are undoing/redoing
+            // only one action.  Note that we are not implementing the multi-level undo/redo functionality,
+            // we are just adding a handler for this command so these toolbar buttons are enabled (Note that
+            // we are just reusing the undo/redo command handlers).  To implement multi-level functionality
+            // we would need to properly handle these two commands as well as MultiLevelUndoList and
+            // MultiLevelRedoList.
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.MultiLevelUndo,
+                new EventHandler(onUndo), new EventHandler(onQueryUndo));
+            addCommand(mcs, VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.MultiLevelRedo,
+                new EventHandler(onRedo), new EventHandler(onQueryRedo));
         }
 
         /// <summary>
@@ -1291,7 +1289,7 @@ namespace LOST.WebLink
             }
 
             // Set the out value to this
-            ppDisp = (IEditor)this;
+            ppDisp = null;
 
             // Store the IExtensibleObjectSite object, it will be used in the Dispose method
             extensibleObjectSite = pParent;
@@ -1380,7 +1378,7 @@ namespace LOST.WebLink
         int IPersistFileFormat.GetFormatList(out string ppszFormatList)
         {
             char Endline = (char)'\n';
-            string FormatList = string.Format(CultureInfo.InvariantCulture, "My Editor (*{0}){1}*{0}{1}{1}", MyExtension, Endline);
+            string FormatList = string.Format(CultureInfo.InvariantCulture, "Web Link (*{0}){1}*{0}{1}{1}", MyExtension, Endline);
             ppszFormatList = FormatList;
             return VSConstants.S_OK;
         }
