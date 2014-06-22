@@ -127,7 +127,7 @@
       <DependentUpon>WebView.cs</DependentUpon>
     </Compile>
     <Compile Include="NativeMethods.cs" />
-    <None Include="Templates\website.website">
+    <None Include="Templates\WebLink.website">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Templates\WebLink.vsdir">

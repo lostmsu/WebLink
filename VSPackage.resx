@@ -148,7 +148,7 @@
     <comment>Name of the editor to show for the Keybindings</comment>
   </data>
   <data name="105" xml:space="preserve">
-    <value>WebLink Files</value>
+    <value>Web Links</value>
   </data>
   <data name="106" xml:space="preserve">
     <value>WebLink</value>
@@ -157,7 +157,7 @@
     <value>website</value>
   </data>
   <data name="109" xml:space="preserve">
-    <value>WebLink File</value>
+    <value>Web Link</value>
   </data>
   <data name="401" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\File.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
