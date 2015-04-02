@@ -77,7 +77,6 @@ namespace Lost.WebLink
         //backs up all objects in the Running Document Table that 
         //support IVsFileBackup and have unsaved changes.
                                 IVsStatusbarUser,   //support updating the status bar
-                                IExtensibleObject,  //so we can get the atuomation object
                                 IVsToolboxUser      //Sends notification about Toolbox items to the owner of these items
     {
         private const uint MyFormat = 0;
@@ -108,7 +107,7 @@ namespace Lost.WebLink
         private WebLinkPackage myPackage;
 
         private string fileName = string.Empty;
-        private bool isDirty;
+		string originalAddress;
         // Flag true when we are loading the file. It is used to avoid to change the isDirty flag
         // when the changes are related to the load operation.
         private bool loading;
@@ -231,8 +230,13 @@ namespace Lost.WebLink
         /// </summary>
         public bool DataChanged
         {
-            get { return isDirty; }
+            get { return this.CurrentAddress != this.originalAddress; }
         }
+
+		public string CurrentAddress
+		{
+			get { return this.editorControl.Address.Text; }
+		}
 
         /// <summary>
         /// returns an instance of the ITrackSelection service object
@@ -426,39 +430,6 @@ namespace Lost.WebLink
         }
         #endregion
 
-        #region IExtensibleObject Implementation
-
-        /// <summary>
-        /// This function is used for Macro playback.  Whenever a macro gets played this funtion will be
-        /// called and then the IEditor functions will be called on the object that ppDisp is set to.
-        /// Since EditorPane implements IEditor we will just set it to "this".
-        /// </summary>
-        /// <param name="Name"> Passing in either null, empty string or "Document" will work.  Anything
-        /// else will result in ppDisp being set to null.</param>
-        /// <param name="pParent"> An object of type IExtensibleObjectSite.  We will keep a reference to this
-        /// so that in the Dispose method we can call the NotifyDelete function.</param>
-        /// <param name="ppDisp"> The object that this is set to will act as the automation object for macro
-        /// playback.  In our case since IEditor is the automation interface and EditorPane
-        /// implements it we will just be setting this parameter to "this".</param>
-        void IExtensibleObject.GetAutomationObject(string Name, IExtensibleObjectSite pParent, out Object ppDisp)
-        {
-            // null or empty string just means the default object, but if a specific string
-            // is specified, then make sure it's the correct one, but don't enforce case
-            if (!string.IsNullOrEmpty(Name) && !Name.Equals("Document", StringComparison.CurrentCultureIgnoreCase))
-            {
-                ppDisp = null;
-                return;
-            }
-
-            // Set the out value to this
-            ppDisp = null;
-
-            // Store the IExtensibleObjectSite object, it will be used in the Dispose method
-            extensibleObjectSite = pParent;
-        }
-
-        #endregion
-
         int Microsoft.VisualStudio.OLE.Interop.IPersist.GetClassID(out Guid pClassID)
         {
             ErrorHandler.ThrowOnFailure(((Microsoft.VisualStudio.OLE.Interop.IPersist)this).GetClassID(out pClassID));
@@ -508,7 +479,7 @@ namespace Lost.WebLink
             }
             // until someone change the file, we can consider it not dirty as
             // the user would be annoyed if we prompt him to save an empty file
-            isDirty = false;
+	        this.originalAddress = "";
             return VSConstants.S_OK;
         }
 
@@ -583,14 +554,13 @@ namespace Lost.WebLink
                     Debug.WriteLine("WebView url load in thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
                     this.editorControl.Browser.Navigate(uri);
                     this.editorControl.Address.Text = uri;
+	                this.originalAddress = uri;
                     loaded = true;
                     break;
                 }
 
                 if (!loaded)
                     throw new FormatException("Unrecognized url file format");
-
-                isDirty = false;
 
                 //Determine if the file is read only on the file system
                 FileAttributes fileAttrs = File.GetAttributes(pszFilename);
@@ -628,7 +598,7 @@ namespace Lost.WebLink
         /// <returns>S_OK if the method succeeds</returns>
         int IPersistFileFormat.IsDirty(out int pfIsDirty)
         {
-            if (isDirty)
+            if (this.DataChanged)
             {
                 pfIsDirty = 1;
             }
@@ -703,7 +673,7 @@ namespace Lost.WebLink
                     SetFileChangeNotification(pszFilename, true); //add notification for new file
                     fileName = pszFilename;     //cache the new file name
                 }
-                isDirty = false;
+				this.originalAddress = this.CurrentAddress;
                 SetReadOnly(false);             //set read only to false since you were successfully able
                 //to save to the new file                                                    
             }
@@ -1347,7 +1317,7 @@ namespace Lost.WebLink
             {
                 // The only interesting case is when we are changing the document
                 // for the first time
-                if (!isDirty)
+                if (!this.DataChanged)
                 {
                     // Check if the QueryEditQuerySave service allow us to change the file
                     if (!CanEditFile()) {
@@ -1358,7 +1328,6 @@ namespace Lost.WebLink
                     }
 
                     // It is possible to change the file, so update the status.
-                    isDirty = true;
                     ITrackSelection track = TrackSelection;
                     if (null != track)
                     {

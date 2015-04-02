@@ -17,7 +17,7 @@ namespace Lost.WebLink
     [Guid(GuidList.guidWebLinkEditorFactoryString)]
     public sealed class EditorFactory : IVsEditorFactory, IDisposable
     {
-        private WebLinkPackage editorPackage;
+        private readonly WebLinkPackage editorPackage;
         private ServiceProvider vsServiceProvider;
 
 
