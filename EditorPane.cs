@@ -559,8 +559,8 @@ namespace Lost.WebLink
                     break;
                 }
 
-                if (!loaded)
-                    throw new FormatException("Unrecognized url file format");
+				if (!loaded)
+					return VSConstants.E_FAIL;
 
                 //Determine if the file is read only on the file system
                 FileAttributes fileAttrs = File.GetAttributes(pszFilename);
