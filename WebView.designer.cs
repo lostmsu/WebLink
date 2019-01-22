@@ -30,18 +30,8 @@ namespace Lost.WebLink
         /// </summary>
         private void InitializeComponent()
         {
-			this.browser = new System.Windows.Forms.WebBrowser();
 			this.address = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
-			// 
-			// browser
-			// 
-			this.browser.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.browser.Location = new System.Drawing.Point(0, 20);
-			this.browser.Name = "browser";
-			this.browser.ScriptErrorsSuppressed = true;
-			this.browser.Size = new System.Drawing.Size(150, 130);
-			this.browser.TabIndex = 0;
 			// 
 			// address
 			// 
@@ -55,17 +45,14 @@ namespace Lost.WebLink
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.browser);
 			this.Controls.Add(this.address);
 			this.Name = "WebView";
 			this.ResumeLayout(false);
 			this.PerformLayout();
-
         }
 
 		#endregion
 
-		private WebBrowser browser;
 		private TextBox address;
 	}
 }
