@@ -245,6 +245,7 @@ namespace Lost.WebLink
         {
             get
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 if (trackSel == null)
                 {
                     trackSel = (ITrackSelection)GetService(typeof(ITrackSelection));
@@ -259,6 +260,7 @@ namespace Lost.WebLink
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly")]
         protected override void Dispose(bool disposing)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             try
             {
                 if (disposing)
@@ -307,6 +309,7 @@ namespace Lost.WebLink
         /// </summary>
         private void NotifyDocChanged()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             // Make sure that we have a file name
             if (fileName.Length == 0)
                 return;
@@ -400,6 +403,7 @@ namespace Lost.WebLink
         /// <param name="e">  Not used.</param>
         private void onQueryPasteNextTBXCBItem(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             // Get the Toolbox Service from the package
             IVsToolboxClipboardCycler clipboardCycler = GetService(typeof(SVsToolbox)) as IVsToolboxClipboardCycler;
 
@@ -417,6 +421,7 @@ namespace Lost.WebLink
         /// <param name="e">  Not used.</param>
         private void onPasteNextTBXCBItem(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             // Get the Toolbox Service from the package
             IVsToolboxClipboardCycler clipboardCycler = GetService(typeof(SVsToolbox)) as IVsToolboxClipboardCycler;
 
@@ -431,6 +436,7 @@ namespace Lost.WebLink
 
         int Microsoft.VisualStudio.OLE.Interop.IPersist.GetClassID(out Guid pClassID)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             ErrorHandler.ThrowOnFailure(((Microsoft.VisualStudio.OLE.Interop.IPersist)this).GetClassID(out pClassID));
             return VSConstants.S_OK;
         }
@@ -489,6 +495,7 @@ namespace Lost.WebLink
         /// <returns>S_OK if the method succeeds</returns>
         int IPersistFileFormat.GetClassID(out Guid pClassID)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             ErrorHandler.ThrowOnFailure(((Microsoft.VisualStudio.OLE.Interop.IPersist)this).GetClassID(out pClassID));
             return VSConstants.S_OK;
         }
@@ -524,6 +531,7 @@ namespace Lost.WebLink
         /// <returns>S_OK if the method succeeds</returns>
         int IPersistFileFormat.Load(string pszFilename, uint grfMode, int fReadOnly)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (pszFilename == null)
             {
                 return VSConstants.E_INVALIDARG;
@@ -627,6 +635,7 @@ namespace Lost.WebLink
         /// <returns>S_OK if the method succeeds</returns>
         int IPersistFileFormat.Save(string pszFilename, int fRemember, uint nFormatIndex)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             int hr = VSConstants.S_OK;
             bool doingSaveOnSameFile = false;
             // If file is null or same --> SAVE
@@ -714,6 +723,7 @@ namespace Lost.WebLink
         /// <returns>S_OK if the function succeeds</returns>
         int IVsPersistDocData.IsDocDataDirty(out int pfDirty)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return ((IPersistFileFormat)this).IsDirty(out pfDirty);
         }
 
@@ -739,6 +749,7 @@ namespace Lost.WebLink
         /// <returns></returns>
         int IVsPersistDocData.SaveDocData(Microsoft.VisualStudio.Shell.Interop.VSSAVEFLAGS dwSave, out string pbstrMkDocumentNew, out int pfSaveCanceled)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             pbstrMkDocumentNew = null;
             pfSaveCanceled = 0;
             int hr = VSConstants.S_OK;
@@ -827,6 +838,7 @@ namespace Lost.WebLink
         /// <returns>S_Ok if the method succeeds</returns>
         int IVsPersistDocData.LoadDocData(string pszMkDocument)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return ((IPersistFileFormat)this).Load(pszMkDocument, 0, 0);
         }
 
@@ -838,6 +850,7 @@ namespace Lost.WebLink
         /// <returns>S_OK if the mthod succeeds</returns>
         int IVsPersistDocData.SetUntitledDocPath(string pszDocDataPath)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return ((IPersistFileFormat)this).InitNew(MyFormat);
         }
 
@@ -848,6 +861,7 @@ namespace Lost.WebLink
         /// <returns>S_OK if the method succeeds</returns>
         int IVsPersistDocData.GetGuidEditorType(out Guid pClassID)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return ((IPersistFileFormat)this).GetClassID(out pClassID);
         }
 
@@ -896,6 +910,7 @@ namespace Lost.WebLink
         /// <returns>S_OK if the mthod succeeds</returns>
         int IVsPersistDocData.ReloadDocData(uint grfFlags)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return ((IPersistFileFormat)this).Load(fileName, grfFlags, 0);
         }
 
@@ -925,6 +940,7 @@ namespace Lost.WebLink
         /// <returns></returns>
         int IVsFileChangeEvents.FilesChanged(uint cChanges, string[] rgpszFile, uint[] rggrfChange)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "\t**** Inside FilesChanged ****"));
 
             //check the different parameters
@@ -995,6 +1011,7 @@ namespace Lost.WebLink
         /// <returns></returns>
         int IVsDocDataFileChangeControl.IgnoreFileChanges(int fIgnore)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "\t **** Inside IgnoreFileChanges ****"));
 
             if (fIgnore != 0)
@@ -1030,6 +1047,7 @@ namespace Lost.WebLink
         /// <returns>Result of teh operation</returns>
         private int SetFileChangeNotification(string pszFileName, bool fStart)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "\t **** Inside SetFileChangeNotification ****"));
 
             int result = VSConstants.E_FAIL;
@@ -1077,6 +1095,7 @@ namespace Lost.WebLink
 
         private int SuspendFileChangeNotification(string pszFileName, int fSuspend)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "\t **** Inside SuspendFileChangeNotification ****"));
 
             if (null == vsFileChangeEx)
@@ -1181,6 +1200,7 @@ namespace Lost.WebLink
         /// <param name="_isFileReadOnly">Indicates whether the file loaded is Read Only or not</param>
         private void SetReadOnly(bool _isFileReadOnly)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Debug.WriteLine("WebView SetReadOnly in thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
             this.editorControl.AllowNavigation = !_isFileReadOnly;
             this.editorControl.Address.ReadOnly = _isFileReadOnly;
@@ -1202,6 +1222,7 @@ namespace Lost.WebLink
         /// <param name="e"></param>
         private void OnFileChangeEvent(object sender, System.EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             //Disable the timer
             FileChangeTrigger.Enabled = false;
 
@@ -1232,6 +1253,7 @@ namespace Lost.WebLink
         /// <returns>String loaded for the specified resource</returns>
         internal string GetResourceString(string resourceName)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             string resourceValue;
             IVsResourceManager resourceManager = (IVsResourceManager)GetService(typeof(SVsResourceManager));
             if (resourceManager == null)
@@ -1250,6 +1272,7 @@ namespace Lost.WebLink
         /// </summary>
         private bool CanEditFile()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "\t**** CanEditFile called ****"));
 
             // Check the status of the recursion guard
@@ -1309,6 +1332,7 @@ namespace Lost.WebLink
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.ITrackSelection.OnSelectChange(Microsoft.VisualStudio.Shell.Interop.ISelectionContainer)")]
         private void OnNavigating(object sender, WebBrowserNavigatingEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Debug.WriteLine(e.TargetFrameName + " url: " + e.Url, "WebLink");
             // During the load operation the text of the control will change, but
             // this change must not be stored in the status of the document.
@@ -1355,6 +1379,7 @@ namespace Lost.WebLink
 
         private void OnSetStatusBar(object sender, System.EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             FNFStatusbarTrigger.Stop();
             ErrorHandler.ThrowOnFailure(((IVsStatusbarUser)this).SetInfo());
         }
@@ -1369,6 +1394,7 @@ namespace Lost.WebLink
         /// <returns> Hresult that represents success or failure.</returns>
         int IVsStatusbarUser.SetInfo()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             // Call the helper function that updates the status bar selection mode
             int hrSetSelectionMode = SetStatusBarSelectionMode();
@@ -1383,6 +1409,7 @@ namespace Lost.WebLink
         /// <returns> Hresult that represents success or failure.</returns>
         int SetStatusBarSelectionMode()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             // Get the IVsStatusBar interface.
             IVsStatusbar statusBar = GetService(typeof(SVsStatusbar)) as IVsStatusbar;
             if (statusBar == null)

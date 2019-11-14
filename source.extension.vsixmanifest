@@ -56,10 +56,10 @@
         <Edition>Community</Edition>
       </VisualStudio>
     </SupportedProducts>
-    <SupportedFrameworkRuntimeEdition MinVersion="4.6.2" MaxVersion="5.0" />
+    <SupportedFrameworkRuntimeEdition MinVersion="4.7.2" MaxVersion="5.0" />
   </Identifier>
   <References>
-        <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0" MaxVersion="16.0">
+        <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0" MaxVersion="16.16">
             <Name>Visual Studio MPF</Name>
         </Reference>
   </References>

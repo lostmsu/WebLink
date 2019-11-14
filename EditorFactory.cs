@@ -35,6 +35,7 @@ namespace Lost.WebLink
         /// </summary>
         public void Dispose()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (vsServiceProvider != null)
             {
                 vsServiceProvider.Dispose();
@@ -57,6 +58,7 @@ namespace Lost.WebLink
 
         public object GetService(Type serviceType)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return vsServiceProvider.GetService(serviceType);
         }
 
